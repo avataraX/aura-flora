@@ -1,55 +1,61 @@
+
 import React from 'react';
 import { ModalType } from '../types';
 
+// Define the props this component will receive from App.tsx
 interface TownViewProps {
-    onOpenModal: (modal: ModalType) => void;
-    onGoToProperty: () => void;
+  onOpenModal: (modal: ModalType) => void;
+  onGoToProperty: () => void;
 }
 
-const Building: React.FC<{ onClick: () => void; label: string; icon: string; className?: string }> = ({ onClick, label, icon, className }) => (
-    <div 
-        onClick={onClick}
-        className={`relative w-48 h-56 cursor-pointer group transition-transform duration-300 hover:scale-105 ${className}`}
-        style={{ transformStyle: 'preserve-3d' }}
-    >
-        <div className="absolute inset-0 transform-gpu" style={{ transform: 'rotateX(60deg) rotateZ(-45deg)' }}>
-            <div className="relative w-full h-full">
-                {/* Roof */}
-                <div className="absolute top-0 left-0 w-full h-full bg-slate-700 transform translate-z-32 shadow-2xl"></div>
-                 {/* Front Wall */}
-                <div className="absolute top-0 left-0 w-full h-32 bg-stone-100 transform origin-top-left -rotate-x-90 shadow-lg flex items-center justify-center p-4">
-                     <div className="text-center text-gray-800">
-                        <p className="text-5xl">{icon}</p>
-                    </div>
-                </div>
-                 {/* Side Wall */}
-                <div className="absolute bottom-0 left-0 w-full h-32 bg-stone-200 transform origin-bottom-left -rotate-y-90 shadow-lg"></div>
-
-                <div className="absolute inset-0 flex items-center justify-center text-center text-white transform translate-z-32" style={{ transform: 'translateZ(128px)' }}>
-                   <div>
-                        <h2 className="text-xl font-bold">{label}</h2>
-                        <p className="text-xs group-hover:underline">Click to Enter</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-
 export const TownView: React.FC<TownViewProps> = ({ onOpenModal, onGoToProperty }) => {
-    return (
-        <div className="relative w-full h-full flex items-center justify-center space-x-16">
-            <Building onClick={() => onOpenModal(ModalType.Shop)} label="Shop" icon="🛒" />
-            <Building onClick={() => onOpenModal(ModalType.Market)} label="Market" icon="⚖️" />
+  return (
+    // Isometric 3D stage container, consistent with PropertyView
+    <div 
+      className="w-[700px] h-[500px] relative transition-all duration-500" 
+      style={{ transformStyle: 'preserve-3d', transform: 'rotateX(60deg) rotateZ(-45deg)' }}
+    >
+      {/* 1. Town Square Ground */}
+      <div className="absolute w-full h-full bg-gray-500/80 rounded-2xl shadow-2xl from-gray-600 to-gray-500 bg-gradient-to-br">
+      </div>
 
-             {/* Go Back Button */}
-            <button 
-                onClick={onGoToProperty} 
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-gray-800/70 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors shadow-lg backdrop-blur-sm"
-            >
-                Back to Property
-            </button>
-        </div>
-    );
+      {/* 2. Seed Shop & Apothecary (Opens ShopModal) */}
+      <div 
+        onClick={() => onOpenModal(ModalType.Shop)}
+        className="absolute w-1/3 h-1/3 top-1/4 left-[10%] bg-blue-200/40 backdrop-blur-md rounded-xl shadow-lg cursor-pointer
+                   border border-blue-100/30 transform-gpu translate-z-[60px]
+                   flex flex-col items-center justify-center text-center p-4
+                   hover:scale-110 hover:border-blue-100 transition-all duration-300"
+      >
+        <div className="text-4xl">🛍️</div>
+        <div className="font-bold text-lg mt-2 text-blue-900">Seed Shop</div>
+        <div className="text-sm text-blue-800/80">(Buy Seeds & Items)</div>
+      </div>
+      
+      {/* 3. Auction House (Opens MarketModal) */}
+      <div 
+        onClick={() => onOpenModal(ModalType.Market)}
+        className="absolute w-1/3 h-1/3 top-1/4 right-[10%] bg-red-200/40 backdrop-blur-md rounded-xl shadow-lg cursor-pointer
+                   border border-red-100/30 transform-gpu translate-z-[60px]
+                   flex flex-col items-center justify-center text-center p-4
+                   hover:scale-110 hover:border-red-100 transition-all duration-300"
+      >
+        <div className="text-4xl">🏛️</div>
+        <div className="font-bold text-lg mt-2 text-red-900">Auction House</div>
+        <div className="text-sm text-red-800/80">(Sell Plants)</div>
+      </div>
+      
+      {/* 4. Path Back to Property */}
+      <div 
+        onClick={onGoToProperty}
+        className="absolute w-1/4 h-1/6 -bottom-4 left-1/3 bg-yellow-800/70 backdrop-blur-sm rounded-lg shadow-md cursor-pointer
+                   border border-yellow-200/30 transform-gpu translate-z-[10px]
+                   flex items-center justify-center text-center p-2
+                   hover:scale-110 hover:border-yellow-200 transition-all duration-300"
+      >
+        <div className="font-semibold text-sm">To Property 🏡</div>
+      </div>
+      
+    </div>
+  );
 };
